@@ -88,12 +88,22 @@ optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 
 # Training
 
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+
+# Assuming that we are on a CUDA machine, this should print a CUDA device:
+
+print(device)
+
+
+
 for epoch in range(100):  # loop over the dataset multiple times
 
     running_loss = 0.0
     for i, data in enumerate(trainloader, 0):
         # get the inputs; data is a list of [inputs, labels]
         inputs, labels = data
+        net.to(device)
+        inputs, labels = data[0].to(device), data[1].to(device)
 
         # zero the parameter gradients
         optimizer.zero_grad()
