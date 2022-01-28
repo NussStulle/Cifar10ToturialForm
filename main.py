@@ -9,7 +9,7 @@ transform = transforms.Compose(
     [transforms.ToTensor(),
      transforms.Normalize((0.4914,0.4822,0.4465),(0.247,0.243,0.261))])
 
-batch_size = 4
+batch_size = 12
 
 trainset = torchvision.datasets.CIFAR10(root='./data', train=True,
                                         download=True, transform=transform)
@@ -96,7 +96,7 @@ print(device)
 
 
 
-for epoch in range(100):  # loop over the dataset multiple times
+for epoch in range(500):  # loop over the dataset multiple times
 
     running_loss = 0.0
     for i, data in enumerate(trainloader, 0):
