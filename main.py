@@ -59,16 +59,22 @@ import torch.nn.functional as F
 class Net(nn.Module):
     def __init__(self):
         super().__init__()
-        self.conv1 = nn.Conv2d(3,6,5)
+        self.conv1 = nn.Conv2d(3, 10, 5, padding='same')
+        self.conv2 = nn.Conv2d(10, 20, 5, padding='same')
+        self.conv3 = nn.Conv2d(20, 32, 5)
         self.pool = nn.MaxPool2d(2, 2)
-        self.conv2 = nn.Conv2d(6, 64, 5)
-        self.fc1 = nn.Linear(64 * 5 * 5, 2048)
-        self.fc2 = nn.Linear(2048, 1024)
-        self.fc3 = nn.Linear(1024, 10)
+        self.conv4 = nn.Conv2d(32, 64, 5)
+        self.fc1 = nn.Linear(64 * 5 * 5, 1024)
+        self.fc2 = nn.Linear(1024, 512)
+        self.fc3 = nn.Linear(512, 10)
 
     def forward(self, x):
-        x = self.pool(F.relu(self.conv1(x)))
-        x = self.pool(F.relu(self.conv2(x)))
+        x = self.conv1(x)
+        x = F.relu(x)
+        x = self.conv2(x)
+        x = F.relu(x)
+        x = self.pool(F.relu(self.conv3(x)))
+        x = self.pool(F.relu(self.conv4(x)))
         x = torch.flatten(x, 1) # flatten all dimensions except batch
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
@@ -117,7 +123,7 @@ for epoch in range(500):  # loop over the dataset multiple times
         # print statistics
         running_loss += loss.item()
         if i % 2000 == 1999:    # print every 2000 mini-batches
-            print(f'[{epoch + 1}, {i + 1:5d}] loss: {running_loss / 2000:.3f}')
+            print(f'[{epoch + 1}, {i + 1:5d}] loss: {running_loss / 2000:.7f}')
             running_loss = 0.0
 
 print('Finished Training')
