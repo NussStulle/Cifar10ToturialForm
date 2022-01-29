@@ -61,10 +61,10 @@ class Net(nn.Module):
         super().__init__()
         self.conv1 = nn.Conv2d(3,6,5)
         self.pool = nn.MaxPool2d(2, 2)
-        self.conv2 = nn.Conv2d(6, 16, 5)
-        self.fc1 = nn.Linear(16 * 5 * 5, 120)
-        self.fc2 = nn.Linear(120, 84)
-        self.fc3 = nn.Linear(84, 10)
+        self.conv2 = nn.Conv2d(6, 64, 5)
+        self.fc1 = nn.Linear(64 * 5 * 5, 2048)
+        self.fc2 = nn.Linear(2048, 1024)
+        self.fc3 = nn.Linear(1024, 10)
 
     def forward(self, x):
         x = self.pool(F.relu(self.conv1(x)))
@@ -83,7 +83,7 @@ net = Net()
 import torch.optim as optim
 
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.SGD(net.parameters(), lr=0.01, momentum=0.9)
+optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 
 
 # Training
