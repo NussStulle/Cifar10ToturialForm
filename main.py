@@ -9,7 +9,7 @@ transform = transforms.Compose(
     [transforms.ToTensor(),
      transforms.Normalize((0.4914,0.4822,0.4465),(0.247,0.243,0.261))])
 
-batch_size = 12
+batch_size = 5
 
 trainset = torchvision.datasets.CIFAR10(root='./data', train=True,
                                         download=True, transform=transform)
@@ -83,7 +83,7 @@ net = Net()
 import torch.optim as optim
 
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
+optimizer = optim.SGD(net.parameters(), lr=0.01, momentum=0.9)
 
 
 # Training
