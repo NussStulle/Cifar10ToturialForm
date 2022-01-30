@@ -67,14 +67,19 @@ class Net(nn.Module):
         self.fc1 = nn.Linear(64 * 5 * 5, 1024)
         self.fc2 = nn.Linear(1024, 512)
         self.fc3 = nn.Linear(512, 10)
+        self.conv_dropout = nn.Dropout2d()
 
     def forward(self, x):
         x = self.conv1(x)
+        x = self.conv_dropout(x)
         x = F.relu(x)
         x = self.conv2(x)
+        x = self.conv_dropout(x)
         x = F.relu(x)
         x = self.pool(F.relu(self.conv3(x)))
+        x = self.conv_dropout(x)
         x = self.pool(F.relu(self.conv4(x)))
+        x = self.conv_dropout(x)
         x = torch.flatten(x, 1) # flatten all dimensions except batch
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
