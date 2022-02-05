@@ -76,7 +76,6 @@ class Net(nn.Module):
         x = self.conv2(x)
         x = F.relu(x)
         x = self.pool(F.relu(self.conv3(x)))
-        x = self.conv_dropout(x)
         x = self.pool(F.relu(self.conv4(x)))
         x = self.conv_dropout(x)
         x = torch.flatten(x, 1) # flatten all dimensions except batch
