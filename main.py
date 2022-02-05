@@ -59,12 +59,12 @@ import torch.nn.functional as F
 class Net(nn.Module):
     def __init__(self):
         super().__init__()
-        self.conv1 = nn.Conv2d(3, 32, 5, padding='same')
-        self.conv2 = nn.Conv2d(32, 64, 5, padding='same')
-        self.conv3 = nn.Conv2d(64, 128, 5)
+        self.conv1 = nn.Conv2d(3, 64, 5, padding='same')
+        self.conv2 = nn.Conv2d(64, 128, 5, padding='same')
+        self.conv3 = nn.Conv2d(128, 256, 5)
         self.pool = nn.MaxPool2d(2, 2)
-        self.conv4 = nn.Conv2d(128, 256, 5)
-        self.fc1 = nn.Linear(256 * 5 * 5, 2048)
+        self.conv4 = nn.Conv2d(256, 512, 5)
+        self.fc1 = nn.Linear(512 * 5 * 5, 2048)
         self.fc2 = nn.Linear(2048, 512)
         self.fc3 = nn.Linear(512, 128)
         self.fc4 = nn.Linear(128, 10)
