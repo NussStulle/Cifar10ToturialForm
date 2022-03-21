@@ -119,8 +119,8 @@ print(device)
 
 
 
-for epoch in range(500):  # loop over the dataset multiple times
-
+for epoch in range(1):  # loop over the dataset multiple times
+    start_time = time.time()
     running_loss = 0.0
     for i, data in enumerate(trainloader, 0):
         # get the inputs; data is a list of [inputs, labels]
@@ -142,6 +142,7 @@ for epoch in range(500):  # loop over the dataset multiple times
         if i % 2000 == 1999:    # print every 2000 mini-batches
             print(f'[{epoch + 1}, {i + 1:5d}] loss: {running_loss / 2000:.7f}')
             running_loss = 0.0
+    print("--- %s seconds ---" % (time.time() - start_time))
 
 print('Finished Training')
 
