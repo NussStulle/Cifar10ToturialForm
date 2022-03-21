@@ -59,6 +59,7 @@ import torch.nn.functional as F
 class Net(nn.Module):
     def __init__(self):
         super().__init__()
+        self.quant = torch.quantization.QuantStub()
         self.conv1 = nn.Conv2d(3, 64, 5, padding='same')
         self.conv2 = nn.Conv2d(64, 128, 5, padding='same')
         self.conv3 = nn.Conv2d(128, 256, 5)
@@ -69,8 +70,11 @@ class Net(nn.Module):
         self.fc3 = nn.Linear(512, 128)
         self.fc4 = nn.Linear(128, 10)
         self.conv_dropout = nn.Dropout2d()
+        self.conv_dropout = nn.Dropout2d()
+
 
     def forward(self, x):
+        x = self.quant(x)
         x = self.conv1(x)
         x = F.relu(x)
         x = self.conv2(x)
@@ -83,8 +87,14 @@ class Net(nn.Module):
         x = F.relu(self.fc2(x))
         x = F.relu(self.fc3(x))
         x = self.fc4(x)
+        x = self.dequant(x)
         return x
 
+model_fp32 = Net()
+model_fp32.eval()
+model_fp32.qconfig = torch.quantization.get_default_qconfig('fbgemm')
+model_int8 = torch.quantization.convert(model_fp32)
+res = model_int8
 
 net = Net()
 
