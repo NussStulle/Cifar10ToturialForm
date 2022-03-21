@@ -128,8 +128,8 @@ images, labels = dataiter.next()
 imshow(torchvision.utils.make_grid(images))
 print('GroundTruth: ', ' '.join(f'{classes[labels[j]]:5s}' for j in range(5)))
 
-#net1 = Net()
-#net1.load_state_dict(torch.load(PATH))
+net1 = Net()
+net1.load_state_dict(torch.load(PATH))
 outputs = net1(images)
 _, predicted = torch.max(outputs, 1)
 
