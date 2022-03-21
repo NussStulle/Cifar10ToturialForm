@@ -4,7 +4,10 @@
 
 import torch
 import torchvision
+import time
 import torchvision.transforms as transforms
+
+
 transform = transforms.Compose(
     [transforms.ToTensor(),
      transforms.Normalize((0.4914,0.4822,0.4465),(0.247,0.243,0.261))])
@@ -70,7 +73,7 @@ class Net(nn.Module):
         self.fc3 = nn.Linear(512, 128)
         self.fc4 = nn.Linear(128, 10)
         self.conv_dropout = nn.Dropout2d()
-        self.conv_dropout = nn.Dropout2d()
+        self.dequant = torch.quantization.DeQuantStub()
 
 
     def forward(self, x):
