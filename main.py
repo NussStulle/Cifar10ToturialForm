@@ -119,7 +119,7 @@ print(device)
 
 
 
-for epoch in range(1):  # loop over the dataset multiple times
+for epoch in range(10):  # loop over the dataset multiple times
     start_time = time.time()
     running_loss = 0.0
     for i, data in enumerate(trainloader, 0):
