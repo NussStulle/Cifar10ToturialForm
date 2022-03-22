@@ -7,10 +7,11 @@ import torchvision
 import time
 import torchvision.transforms as transforms
 
-# Vordifinierung
+# Vordifinierungen
+
 transform = transforms.Compose(
     [transforms.ToTensor(),
-     transforms.Normalize((0.4914,0.4822,0.4465),(0.247,0.243,0.261))])
+     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
 batch_size = 5
 
@@ -62,35 +63,25 @@ class Net(nn.Module):
     def __init__(self):
         super().__init__()
         self.quant = torch.quantization.QuantStub() #Quantisierung
-        self.conv1 = nn.Conv2d(3, 64, 5, padding='same') # 1. Convolution mit je ein Gangangskanal je
-                                                        # RGB- Wert, also 3 Ein- und 64 Ausgangskanälen
-        self.conv2 = nn.Conv2d(64, 128, 5, padding='same') # 2. Convolution mit 64 Ein- und 128 Ausgangskanälen
-        self.conv3 = nn.Conv2d(128, 256, 5) # 3. Convolution mit 128 Ein- und 256 Ausgangskanälen
-        self.pool = nn.MaxPool2d(2, 2) # Maxpool-Defintion mit 2x2 Kernel
-        self.conv4 = nn.Conv2d(256, 512, 5) # 4. Convolution mit 256 Ein- und 512 Ausgangskanäle
-        self.fc1 = nn.Linear(512 * 5 * 5, 2048) # 1. FullyConnected-Layer mit Kanalgröße * Matrixgröße
-                                                # als Eingangskanalgröße und 2048 Ausgangskanäle
-        self.fc2 = nn.Linear(2048, 512)  # 2. FullyConntected-Layer mit 2048 Ein- und 512 Ausgangskaäle
-        self.fc3 = nn.Linear(512, 128)   # 3. FullycConntected-Layer 512 Ein- und 128 Ausgangskanäle
-        self.fc4 = nn.Linear(128, 10)   # 4. FullyConnected
+        self.conv1 = nn.Conv2d(3, 6, 5)
+        self.pool = nn.MaxPool2d(2, 2)
+        self.conv2 = nn.Conv2d(6, 16, 5)
+        self.fc1 = nn.Linear(16 * 5 * 5, 120)
+        self.fc2 = nn.Linear(120, 84)
+        self.fc3 = nn.Linear(84, 10)
         self.conv_dropout = nn.Dropout2d() # Dropout, um  Zufällig Kanäle zu Löschen für Overcommiting zu Verhindern
         self.dequant = torch.quantization.DeQuantStub() # Dequantisierung
 
 
     def forward(self, x):
         x = self.quant(x)  #Quanisierung
-        x = self.conv1(x) # Aufruf der 1. Convolution
-        x = F.relu(x) #ReLu der Werte
-        x = self.conv2(x) # Aufruf der 2. Convolution
-        x = F.relu(x) #ReLu der Werte
-        x = self.pool(F.relu(self.conv3(x))) # Aufruf der 3. Convolution mit ReLu und Maxpool
-        x = self.pool(F.relu(self.conv4(x))) # Aufruf der 4. Convolution mit Relu und Maxpool
-        x = self.conv_dropout(x) # Aufruf des  Dropouts
-        x = torch.flatten(x, 1) # Vektorisierung der Daten, bis auf den Batch
-        x = F.relu(self.fc1(x)) # Aufruf des 1. FullyConnected-Layer mit ReLu
-        x = F.relu(self.fc2(x)) # Aufruf des 2. FullyConnected-Layer mit ReLu
-        x = F.relu(self.fc3(x)) # Aufruf des 3. FullyConnected-Layer mit ReLu
-        x = self.fc4(x) # Aufruf des 4. FullyConnected-Layer
+        x = self.pool(F.relu(self.conv1(x)))
+        x = self.pool(F.relu(self.conv2(x)))
+        x = self.conv_dropout(x)  # Aufruf des  Dropouts
+        x = torch.flatten(x, 1)  # flatten all dimensions except batch
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = self.fc3(x)
         x = self.dequant(x) #Dequantisierung
         return x
 
@@ -121,7 +112,7 @@ print(device)
 
 # Training beginnt hier per Forwardpopagation
 
-for epoch in range(50):  # Loop über die Anzahl der hier Festgelegte Epochen
+for epoch in range(1):  # Loop über die Anzahl der hier Festgelegte Epochen
     start_time = time.time()
     running_loss = 0.0
     for i, data in enumerate(trainloader, 0):
