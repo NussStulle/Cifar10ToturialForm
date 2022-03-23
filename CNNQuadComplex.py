@@ -107,7 +107,7 @@ net = Net()
 import torch.optim as optim
 
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.SGD(net.parameters(), lr=0.0001, momentum=0.9)
+optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 
 
 # Abfrage, ob das Training über die CPU oder über die GPU läuft, mit Ausgabe des Gerätes
