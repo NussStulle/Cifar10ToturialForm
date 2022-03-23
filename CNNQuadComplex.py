@@ -119,7 +119,7 @@ print(device)
 
 # Training beginnt hier per Forwardpopagation
 
-for epoch in range(40):  # Loop über die Anzahl der hier Festgelegte Epochen
+for epoch in range(50):  # Loop über die Anzahl der hier Festgelegte Epochen
     start_time = time.time()
     running_loss = 0.0
     for i, data in enumerate(trainloader, 0):
